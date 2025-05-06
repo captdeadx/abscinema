@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="57d79628-cb22-4001-bcd4-0abe60bee84a" name="Changes" comment="New changes made, index and cinema.html page added">
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="57d79628-cb22-4001-bcd4-0abe60bee84a" name="Changes" comment="NEW CHANGES TO docker-compose.yml, Dockerfile and requirements.txt file.">
+      <change beforePath="$PROJECT_DIR$/ReadMe.md" beforeDir="false" afterPath="$PROJECT_DIR$/ReadMe.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,11 +69,20 @@
       <option name="project" value="LOCAL" />
       <updated>1746535854318</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="NEW CHANGES TO docker-compose.yml, Dockerfile and requirements.txt file.">
+      <option name="closed" value="true" />
+      <created>1746536669645</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1746536669645</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="New changes made, index and cinema.html page added" />
-    <option name="LAST_COMMIT_MESSAGE" value="New changes made, index and cinema.html page added" />
+    <MESSAGE value="NEW CHANGES TO docker-compose.yml, Dockerfile and requirements.txt file." />
+    <option name="LAST_COMMIT_MESSAGE" value="NEW CHANGES TO docker-compose.yml, Dockerfile and requirements.txt file." />
   </component>
 </project>

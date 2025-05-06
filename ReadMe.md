@@ -65,3 +65,102 @@ The application uses an SQLite database named `abs_cinema.db` with the following
 ## Disclaimer
 
 This application is intended for educational purposes only. The vulnerabilities included are deliberately implemented to demonstrate security concepts. Do not use this code in production environments or expose it to public networks.
+
+## Quick Start with Docker
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Setup and Run
+
+1. Clone the repository or download the project files:
+
+```bash
+git clone <repository-url>
+cd abs_cinema
+```
+
+2. Make sure you have the following file structure:
+
+```
+abs_cinema/
+├── app.py                  # Flask application
+├── Dockerfile              # Docker build instructions
+├── docker-compose.yml      # Docker Compose configuration
+├── requirements.txt        # Python dependencies
+├── templates/
+│   ├── index.html          # Directory index page
+│   └── cinema.html         # Main cinema booking application
+└── static/                 # Static files (optional)
+```
+
+3. Build and start the Docker container:
+
+```bash
+docker-compose up --build
+```
+
+4. Access the application:
+   - Main application: http://localhost:5000/
+   - Directory index (requires URL manipulation): http://localhost:5000/index
+
+## Docker Commands
+
+Here are useful commands for managing your Docker container:
+
+```bash
+# Build and start the containers
+docker-compose up --build
+
+# Run containers in the background
+docker-compose up -d
+
+# Stop the containers
+docker-compose down
+
+# View logs
+docker-compose logs -f
+
+# Restart the containers
+docker-compose restart
+
+# Check container status
+docker-compose ps
+
+# Access the container shell
+docker-compose exec cinema-app bash
+```
+
+
+## Data Persistence
+
+The application uses a Docker volume to persist data:
+- Database file: `data/abs_cinema.db`
+- User credentials file: `data/users_info.txt`
+
+This ensures your data survives container restarts.
+
+## Troubleshooting
+
+- **Permission Issues**: If you encounter permission problems with the data directory:
+  ```bash
+  sudo chown -R $USER:$USER abs_cinema/data
+  ```
+
+- **Port Conflict**: If port 5000 is already in use, modify the port mapping in `docker-compose.yml`:
+  ```yaml
+  ports:
+    - "8080:5000"  # Change 5000 to any available port
+  ```
+
+## Educational Use
+
+This application is designed to demonstrate:
+- Common web security vulnerabilities
+- How attackers can exploit insecure design
+- The importance of proper input validation
+- Secure session management practices
+
+Remember that this is a deliberately vulnerable application. Never use this code in a production environment or expose it to the internet.
