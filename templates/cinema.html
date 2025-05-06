@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Booking Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        /* Admin Panel Styles */
+        .admin-panel {
+            background-color: #222;
+            color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .admin-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .admin-control-group {
+            flex: 1;
+            min-width: 250px;
+            background-color: #333;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .admin-checkbox-list {
+            margin: 10px 0;
+        }
+        .admin-checkbox-item {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        .admin-checkbox-item label {
+            margin-left: 8px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        .user-info {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        .user-info span {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .logout-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .logout-btn:hover {
+            background-color: #ff3333;
+        }
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #555;
+        }
+        .cinema-selection {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .cinema-card {
+            flex: 1;
+            min-width: 250px;
+            background-color: white;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .cinema-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .cinema-card h3 {
+            margin-top: 0;
+        }
+        .movie-list {
+            margin-top: 15px;
+        }
+        .movie-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .time-slots {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .time-slot {
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .time-slot:hover, .time-slot.selected {
+            background-color: #333;
+            color: white;
+        }
+        .selected-cinema {
+            background-color: #e6f7ff;
+            border: 2px solid #1890ff;
+        }
+        .booking-form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .booking-summary {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .payment-summary {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Cinema Booking Portal</h1>
+        <div id="user-info" class="user-info hide">
+            <span>Logged in as: <span id="logged-username">Guest</span></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Login Section -->
+        <div id="login-section">
+            <div class="login-form">
+                <h2>Login to Book Tickets</h2>
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="user1">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" value="password123">
+                </div>
+                <button class="btn" onclick="login()">Login</button>
+            </div>
+        </div>
+
+        <!-- Admin Panel (only visible to admin) -->
+        <div id="admin-panel" class="admin-panel hide">
+            <h2>Admin Control Panel</h2>
+            <p>Welcome, Administrator! You have access to special booking privileges.</p>
+
+            <div class="admin-controls">
+                <div class="admin-control-group">
+                    <h3>Select Multiple Cinemas</h3>
+                    <div class="admin-checkbox-list" id="admin-cinema-list">
+                        <div class="admin-checkbox-item">
+                            <input type="checkbox" id="admin-select-all-cinemas">
+                            <label for="admin-select-all-cinemas">Select All Cinemas</label>
+                        </div>
+                        <div class="admin-checkbox-item">
+                            <input type="checkbox" id="admin-cinema-Sathiyam" value="Sathiyam">
+                            <label for="admin-cinema-Sathiyam">Sathiyam</label>
+                        </div>
+                        <div class="admin-checkbox-item">
+                            <input type="checkbox" id="admin-cinema-INOX" value="INOX">
+                            <label for="admin-cinema-INOX">INOX</label>
+                        </div>
+                        <div class="admin-checkbox-item">
+                            <input type="checkbox" id="admin-cinema-Luxe" value="Luxe">
+                            <label for="admin-cinema-Luxe">Luxe</label>
+                        </div>
+                        <div class="admin-checkbox-item">
+                            <input type="checkbox" id="admin-cinema-PVR" value="PVR">
+                            <label for="admin-cinema-PVR">PVR</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-control-group">
+                    <h3>Select Multiple Movies</h3>
+                    <div class="admin-checkbox-list" id="admin-movie-list">
+                        <div class="admin-checkbox-item">
+                            <input type="checkbox" id="admin-select-all-movies">
+                            <label for="admin-select-all-movies">Select All Movies</label>
+                        </div>
+                        <div class="admin-checkbox-item">
+                            <input type="checkbox" id="admin-movie-Thunderbolts" value="Thunderbolts">
+                            <label for="admin-movie-Thunderbolts">Thunderbolts</label>
+                        </div>
+                        <div class="admin-checkbox-item">
+                            <input type="checkbox" id="admin-movie-Retro" value="Retro">
+                            <label for="admin-movie-Retro">Retro</label>
+                        </div>
+                        <div class="admin-checkbox-item">
+                            <input type="checkbox" id="admin-movie-TouristFamily" value="Tourist Family">
+                            <label for="admin-movie-TouristFamily">Tourist Family</label>
+                        </div>
+                        <div class="admin-checkbox-item">
+                            <input type="checkbox" id="admin-movie-Amore" value="Amore">
+                            <label for="admin-movie-Amore">Amore</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-control-group">
+                    <h3>Select Show Times</h3>
+                    <div class="admin-checkbox-list" id="admin-time-list">
+                        <div class="admin-checkbox-item">
+                            <input type="checkbox" id="admin-select-all-times">
+                            <label for="admin-select-all-times">Select All Times</label>
+                        </div>
+                        <div class="admin-checkbox-item">
+                            <input type="checkbox" id="admin-time-12" value="12:00 PM">
+                            <label for="admin-time-12">12:00 PM</label>
+                        </div>
+                        <div class="admin-checkbox-item">
+                            <input type="checkbox" id="admin-time-10" value="10:00 PM">
+                            <label for="admin-time-10">10:00 PM</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-control-group">
+                    <h3>Booking Options</h3>
+                    <div class="form-group">
+                        <label for="admin-attendees">Number of Attendees (No Limit):</label>
+                        <input type="number" id="admin-attendees" name="admin-attendees" value="100" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-discount">Apply Discount:</label>
+                        <select id="admin-discount">
+                            <option value="25">25% (token25)</option>
+                            <option value="50">50% (Admin Special)</option>
+                            <option value="100">100% (Free)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" style="margin-top: 15px;" onclick="adminProceedToPayment()">Process Mass Booking</button>
+        </div>
+
+        <!-- Cinema Selection Section -->
+        <div id="cinema-section" class="hide">
+            <h2>Select Cinema, Movie & Show Time</h2>
+            <div class="cinema-selection">
+                <div class="cinema-card" onclick="selectCinema('Sathiyam', this)" id="cinema-Sathiyam">
+                    <h3>Sathiyam</h3>
+                    <div class="movie-list">
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Thunderbolts" id="Sathiyam-Thunderbolts">
+                            <label for="Sathiyam-Thunderbolts">Thunderbolts</label>
+                        </div>
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Retro" id="Sathiyam-Retro">
+                            <label for="Sathiyam-Retro">Retro</label>
+                        </div>
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Tourist Family" id="Sathiyam-TouristFamily">
+                            <label for="Sathiyam-TouristFamily">Tourist Family</label>
+                        </div>
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Amore" id="Sathiyam-Amore">
+                            <label for="Sathiyam-Amore">Amore</label>
+                        </div>
+                    </div>
+                    <div class="time-slots">
+                        <div class="time-slot" onclick="selectTime('12:00 PM', this)">12:00 PM</div>
+                        <div class="time-slot" onclick="selectTime('10:00 PM', this)">10:00 PM</div>
+                    </div>
+                    <p>Available seats: <span id="seats-Sathiyam">500</span></p>
+                </div>
+
+                <div class="cinema-card" onclick="selectCinema('INOX', this)" id="cinema-INOX">
+                    <h3>INOX</h3>
+                    <div class="movie-list">
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Thunderbolts" id="INOX-Thunderbolts">
+                            <label for="INOX-Thunderbolts">Thunderbolts</label>
+                        </div>
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Retro" id="INOX-Retro">
+                            <label for="INOX-Retro">Retro</label>
+                        </div>
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Tourist Family" id="INOX-TouristFamily">
+                            <label for="INOX-TouristFamily">Tourist Family</label>
+                        </div>
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Amore" id="INOX-Amore">
+                            <label for="INOX-Amore">Amore</label>
+                        </div>
+                    </div>
+                    <div class="time-slots">
+                        <div class="time-slot" onclick="selectTime('12:00 PM', this)">12:00 PM</div>
+                        <div class="time-slot" onclick="selectTime('10:00 PM', this)">10:00 PM</div>
+                    </div>
+                    <p>Available seats: <span id="seats-INOX">500</span></p>
+                </div>
+
+                <div class="cinema-card" onclick="selectCinema('Luxe', this)" id="cinema-Luxe">
+                    <h3>Luxe</h3>
+                    <div class="movie-list">
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Thunderbolts" id="Luxe-Thunderbolts">
+                            <label for="Luxe-Thunderbolts">Thunderbolts</label>
+                        </div>
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Retro" id="Luxe-Retro">
+                            <label for="Luxe-Retro">Retro</label>
+                        </div>
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Tourist Family" id="Luxe-TouristFamily">
+                            <label for="Luxe-TouristFamily">Tourist Family</label>
+                        </div>
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Amore" id="Luxe-Amore">
+                            <label for="Luxe-Amore">Amore</label>
+                        </div>
+                    </div>
+                    <div class="time-slots">
+                        <div class="time-slot" onclick="selectTime('12:00 PM', this)">12:00 PM</div>
+                        <div class="time-slot" onclick="selectTime('10:00 PM', this)">10:00 PM</div>
+                    </div>
+                    <p>Available seats: <span id="seats-Luxe">500</span></p>
+                </div>
+
+                <div class="cinema-card" onclick="selectCinema('PVR', this)" id="cinema-PVR">
+                    <h3>PVR</h3>
+                    <div class="movie-list">
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Thunderbolts" id="PVR-Thunderbolts">
+                            <label for="PVR-Thunderbolts">Thunderbolts</label>
+                        </div>
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Retro" id="PVR-Retro">
+                            <label for="PVR-Retro">Retro</label>
+                        </div>
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Tourist Family" id="PVR-TouristFamily">
+                            <label for="PVR-TouristFamily">Tourist Family</label>
+                        </div>
+                        <div class="movie-item">
+                            <input type="radio" name="movie" value="Amore" id="PVR-Amore">
+                            <label for="PVR-Amore">Amore</label>
+                        </div>
+                    </div>
+                    <div class="time-slots">
+                        <div class="time-slot" onclick="selectTime('12:00 PM', this)">12:00 PM</div>
+                        <div class="time-slot" onclick="selectTime('10:00 PM', this)">10:00 PM</div>
+                    </div>
+                    <p>Available seats: <span id="seats-PVR">500</span></p>
+                </div>
+            </div>
+
+            <div class="booking-form">
+                <h2>Enter Number of Attendees</h2>
+                <div class="form-group">
+                    <label for="attendees">Number of Attendees:</label>
+                    <input type="number" id="attendees" name="attendees" min="1" max="15" value="1">
+                </div>
+
+                <div class="booking-summary">
+                    <h3>Booking Summary</h3>
+                    <p>Selected Cinema: <span id="summary-cinema">Not selected</span></p>
+                    <p>Selected Movie: <span id="summary-movie">Not selected</span></p>
+                    <p>Selected Time: <span id="summary-time">Not selected</span></p>
+                    <p>Number of Attendees: <span id="summary-attendees">1</span></p>
+                </div>
+
+                <button class="btn" onclick="proceedToPayment()">Proceed to Payment</button>
+            </div>
+        </div>
+
+        <!-- Payment Section -->
+        <div id="payment-section" class="hide">
+            <div class="booking-form">
+                <h2>Apply Coupon & Complete Payment</h2>
+                <div class="form-group">
+                    <label for="coupon">Coupon Code:</label>
+                    <input type="text" id="coupon" name="coupon" placeholder="Enter coupon code">
+                </div>
+                <button class="btn" onclick="applyCoupon()">Apply Coupon</button>
+
+                <div class="payment-summary">
+                    <h3>Payment Summary</h3>
+                    <p>Cinema: <span id="payment-cinema"></span></p>
+                    <p>Movie: <span id="payment-movie"></span></p>
+                    <p>Show Time: <span id="payment-time"></span></p>
+                    <p>Number of Tickets: <span id="payment-tickets"></span></p>
+                    <p>Price per Ticket: $<span id="payment-price">10</span></p>
+                    <p>Total Amount: $<span id="payment-total">10</span></p>
+                    <p id="discount-info" class="hide">Discount Applied (25%): -$<span id="payment-discount">0</span></p>
+                    <p>Final Amount: $<span id="payment-final">10</span></p>
+                </div>
+
+                <button class="btn" onclick="confirmBooking()">Confirm Booking</button>
+            </div>
+        </div>
+
+        <!-- Confirmation Section -->
+        <div id="confirmation-section" class="hide">
+            <div class="booking-form">
+                <h2>Booking Confirmed!</h2>
+                <p>Your booking has been confirmed with the following details:</p>
+                <div class="payment-summary">
+                    <p>Booking ID: <span id="booking-id"></span></p>
+                    <p>Cinema: <span id="confirm-cinema"></span></p>
+                    <p>Movie: <span id="confirm-movie"></span></p>
+                    <p>Show Time: <span id="confirm-time"></span></p>
+                    <p>Number of Tickets: <span id="confirm-tickets"></span></p>
+                    <p>Final Amount Paid: $<span id="confirm-amount"></span></p>
+                </div>
+                <button class="btn" onclick="newBooking()">Make Another Booking</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let bookingState = {
+            userId: null,
+            username: null,
+            cinema: null,
+            movie: null,
+            time: null,
+            attendees: 1,
+            ticketPrice: 10,
+            totalPrice: 10,
+            discount: 0,
+            finalPrice: 10,
+            bookingId: null,
+            isAdmin: false,
+            adminBookings: [] // For multiple bookings by admin
+        };
+
+        // Admin panel event handlers setup
+        function setupAdminPanelHandlers() {
+            // Cinema select all handler
+            document.getElementById('admin-select-all-cinemas').addEventListener('change', function() {
+                const isChecked = this.checked;
+                document.querySelectorAll('#admin-cinema-list input[type="checkbox"]:not(#admin-select-all-cinemas)').forEach(checkbox => {
+                    checkbox.checked = isChecked;
+                });
+            });
+
+            // Movie select all handler
+            document.getElementById('admin-select-all-movies').addEventListener('change', function() {
+                const isChecked = this.checked;
+                document.querySelectorAll('#admin-movie-list input[type="checkbox"]:not(#admin-select-all-movies)').forEach(checkbox => {
+                    checkbox.checked = isChecked;
+                });
+            });
+
+            // Time select all handler
+            document.getElementById('admin-select-all-times').addEventListener('change', function() {
+                const isChecked = this.checked;
+                document.querySelectorAll('#admin-time-list input[type="checkbox"]:not(#admin-select-all-times)').forEach(checkbox => {
+                    checkbox.checked = isChecked;
+                });
+            });
+        }
+
+        // Setup handlers on page load
+        window.onload = function() {
+            setupAdminPanelHandlers();
+
+            // Check for URL parameters that might indicate session state (vulnerable to URL tampering)
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('userId');
+
+            if (userId) {
+                // Auto-restore session from URL (IDOR vulnerability)
+                fetch('/api/cinema_data')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update available seats display
+                        updateSeatDisplay(data);
+
+                        // Check for existing session
+                        if (isLoggedIn()) {
+                            showUserSection();
+                        }
+                    });
+            }
+
+            // Admin backdoor via URL parameter (intentional security flaw)
+            const adminBackdoor = urlParams.get('adminMode');
+            if (adminBackdoor === 'true') {
+                // Force admin mode regardless of login
+                bookingState.isAdmin = true;
+                bookingState.userId = 2; // Admin user ID
+
+                // Show admin user info
+                document.getElementById('user-info').classList.remove('hide');
+                document.getElementById('logged-username').textContent = "admin (via backdoor)";
+
+                document.getElementById('login-section').classList.add('hide');
+                document.getElementById('admin-panel').classList.remove('hide');
+                console.log("Admin backdoor activated via URL parameter!");
+            }
+        };
+
+        // Function to update seat display
+        function updateSeatDisplay(cinemaData) {
+            if (!cinemaData) return;
+
+            // Group by cinema and calculate total available seats
+            const cinemaSeats = {};
+
+            cinemaData.forEach(item => {
+                if (!cinemaSeats[item.cinema_name]) {
+                    cinemaSeats[item.cinema_name] = { total: 0, booked: 0 };
+                }
+
+                cinemaSeats[item.cinema_name].total += item.total_seats;
+                cinemaSeats[item.cinema_name].booked += item.booked_seats;
+            });
+
+            // Update the display
+            for (const cinema in cinemaSeats) {
+                const available = cinemaSeats[cinema].total - cinemaSeats[cinema].booked;
+                const element = document.getElementById(`seats-${cinema}`);
+                if (element) {
+                    element.textContent = available;
+                }
+            }
+        }
+
+        // Check if user is logged in
+        function isLoggedIn() {
+            return bookingState.userId !== null;
+        }
+
+        // Show appropriate section for logged in user
+        function showUserSection() {
+            document.getElementById('login-section').classList.add('hide');
+
+            if (bookingState.isAdmin) {
+                document.getElementById('admin-panel').classList.remove('hide');
+            } else {
+                document.getElementById('cinema-section').classList.remove('hide');
+            }
+        }
+
+        // Login function
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                alert('Please enter both username and password.');
+                return;
+            }
+
+            // Send login request to backend
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Set booking state
+                    bookingState.userId = data.user_id;
+                    bookingState.username = data.username;
+                    bookingState.isAdmin = data.is_admin;
+
+                    // Update the user info display
+                    document.getElementById('user-info').classList.remove('hide');
+                    document.getElementById('logged-username').textContent = username;
+
+                    // Show appropriate section
+                    showUserSection();
+
+                    // Set URL with user info (vulnerable to IDOR)
+                    history.pushState(null, '', `?userId=${data.user_id}&isAdmin=${data.is_admin}`);
+
+                    // Fetch cinema data
+                    fetch('/api/cinema_data')
+                        .then(response => response.json())
+                        .then(cinemaData => {
+                            updateSeatDisplay(cinemaData);
+                        });
+                } else {
+                    alert('Login failed: ' + (data.message || 'Invalid credentials'));
+                }
+            })
+            .catch(error => {
+                console.error('Error during login:', error);
+                alert('An error occurred during login. Please try again.');
+            });
+        }
+
+        // Logout function
+        function logout() {
+            // Send logout request to backend
+            fetch('/api/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Reset booking state
+                    bookingState = {
+                        userId: null,
+                        username: null,
+                        cinema: null,
+                        movie: null,
+                        time: null,
+                        attendees: 1,
+                        ticketPrice: 10,
+                        totalPrice: 10,
+                        discount: 0,
+                        finalPrice: 10,
+                        bookingId: null,
+                        isAdmin: false,
+                        adminBookings: []
+                    };
+
+                    // Hide user info panel
+                    document.getElementById('user-info').classList.add('hide');
+
+                    // Reset UI and go back to login page
+                    document.getElementById('login-section').classList.remove('hide');
+                    document.getElementById('cinema-section').classList.add('hide');
+                    document.getElementById('payment-section').classList.add('hide');
+                    document.getElementById('confirmation-section').classList.add('hide');
+                    document.getElementById('admin-panel').classList.add('hide');
+
+                    // Reset form fields
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+
+                    // Clear URL parameters
+                    history.pushState(null, '', window.location.pathname);
+                }
+            });
+        }
+
+        function selectCinema(cinema, element) {
+            // Reset previous selection
+            document.querySelectorAll('.cinema-card').forEach(card => {
+                card.classList.remove('selected-cinema');
+            });
+
+            // Set new selection
+            element.classList.add('selected-cinema');
+            bookingState.cinema = cinema;
+
+            // Update summary
+            document.getElementById('summary-cinema').textContent = cinema;
+        }
+
+        function selectTime(time, element) {
+            // Reset previous selection
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+
+            // Set new selection
+            element.classList.add('selected');
+            bookingState.time = time;
+
+            // Update summary
+            document.getElementById('summary-time').textContent = time;
+
+            // Check if a movie is selected
+            const selectedMovie = document.querySelector('input[name="movie"]:checked');
+            if (selectedMovie) {
+                bookingState.movie = selectedMovie.value;
+                document.getElementById('summary-movie').textContent = selectedMovie.value;
+            }
+
+            event.stopPropagation(); // Prevent cinema card from being triggered
+        }
+
+        // Event listener for movie selection
+        document.querySelectorAll('input[name="movie"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                bookingState.movie = this.value;
+                document.getElementById('summary-movie').textContent = this.value;
+                event.stopPropagation(); // Prevent cinema card from being triggered
+            });
+        });
+
+        // Event listener for attendees input
+        document.getElementById('attendees').addEventListener('input', function() {
+            const attendees = parseInt(this.value);
+            if (attendees > 0) {
+                bookingState.attendees = attendees;
+                document.getElementById('summary-attendees').textContent = attendees;
+
+                // Update prices
+                updatePrices();
+            }
+        });
+
+        function updatePrices() {
+            bookingState.totalPrice = bookingState.attendees * bookingState.ticketPrice;
+            bookingState.finalPrice = bookingState.totalPrice - bookingState.discount;
+
+            // Update payment summary
+            document.getElementById('payment-total').textContent = bookingState.totalPrice;
+            document.getElementById('payment-final').textContent = bookingState.finalPrice;
+
+            if (bookingState.discount > 0) {
+                document.getElementById('payment-discount').textContent = bookingState.discount;
+                document.getElementById('discount-info').classList.remove('hide');
+            } else {
+                document.getElementById('discount-info').classList.add('hide');
+            }
+        }
+
+        function proceedToPayment() {
+            // Validate selection
+            if (!bookingState.cinema || !bookingState.movie || !bookingState.time) {
+                alert('Please select a cinema, movie, and show time!');
+                return;
+            }
+
+            if (bookingState.attendees <= 0) {
+                alert('Please enter a valid number of attendees!');
+                return;
+            }
+
+            // Check if deposit required (more than 15 attendees)
+            if (bookingState.attendees > 15) {
+                alert('For more than 15 attendees, a deposit is required. Please contact our customer service.');
+                return;
+            }
+
+            // Show payment section
+            document.getElementById('cinema-section').classList.add('hide');
+            document.getElementById('payment-section').classList.remove('hide');
+
+            // Update payment summary
+            document.getElementById('payment-cinema').textContent = bookingState.cinema;
+            document.getElementById('payment-movie').textContent = bookingState.movie;
+            document.getElementById('payment-time').textContent = bookingState.time;
+            document.getElementById('payment-tickets').textContent = bookingState.attendees;
+
+            // Update URL with booking details (vulnerable to URL tampering)
+            const url = `?userId=${bookingState.userId}&cinema=${bookingState.cinema}&movie=${bookingState.movie}&time=${bookingState.time}&attendees=${bookingState.attendees}`;
+            history.pushState(null, '', url);
+
+            updatePrices();
+        }
+
+        function applyCoupon() {
+            const couponCode = document.getElementById('coupon').value;
+
+            if (couponCode === 'token25') {
+                // Apply discount (25% off)
+                const discountAmount = (bookingState.totalPrice * 25) / 100;
+                bookingState.discount = discountAmount;
+                alert('Coupon applied! You got a 25% discount.');
+
+                // Update prices
+                updatePrices();
+            } else {
+                alert('Invalid coupon code!');
+            }
+        }
+
+        function confirmBooking() {
+            // Validate booking
+            if (!bookingState.cinema || !bookingState.movie || !bookingState.time || bookingState.attendees <= 0) {
+                alert('Please select a cinema, movie, show time, and enter a valid number of attendees!');
+                return;
+            }
+
+            // Prepare booking data
+            const bookingData = {
+                cinema: bookingState.cinema,
+                movie: bookingState.movie,
+                time: bookingState.time,
+                attendees: bookingState.attendees,
+                discount: bookingState.discount
+            };
+
+            // Send booking request to backend
+            fetch('/api/book', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bookingData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update booking state
+                    bookingState.bookingId = data.booking_id;
+
+                    // Show confirmation
+                    document.getElementById('payment-section').classList.add('hide');
+                    document.getElementById('confirmation-section').classList.remove('hide');
+
+                    // Update confirmation details
+                    document.getElementById('booking-id').textContent = data.booking_id;
+                    document.getElementById('confirm-cinema').textContent = data.cinema;
+                    document.getElementById('confirm-movie').textContent = data.movie;
+                    document.getElementById('confirm-time').textContent = data.time;
+                    document.getElementById('confirm-tickets').textContent = data.attendees;
+                    document.getElementById('confirm-amount').textContent = data.final_price;
+
+                    // Update URL with booking ID (IDOR vulnerability)
+                    history.pushState(null, '', `?bookingId=${data.booking_id}`);
+
+                    // Set a short timeout before logging out
+                    setTimeout(function() {
+                        alert('Your booking is confirmed! You will now be logged out.');
+                        logout();
+                    }, 3000);
+                } else {
+                    alert('Booking failed: ' + (data.message || 'An error occurred'));
+                }
+            })
+            .catch(error => {
+                console.error('Error during booking:', error);
+                alert('An error occurred during booking. Please try again.');
+            });
+        }
+
+        // Admin mass booking function
+        function adminProceedToPayment() {
+            // Get selected cinemas
+            const selectedCinemas = [];
+            document.querySelectorAll('#admin-cinema-list input[type="checkbox"]:not(#admin-select-all-cinemas):checked').forEach(checkbox => {
+                selectedCinemas.push(checkbox.value);
+            });
+
+            // Get selected movies
+            const selectedMovies = [];
+            document.querySelectorAll('#admin-movie-list input[type="checkbox"]:not(#admin-select-all-movies):checked').forEach(checkbox => {
+                selectedMovies.push(checkbox.value);
+            });
+
+            // Get selected times
+            const selectedTimes = [];
+            document.querySelectorAll('#admin-time-list input[type="checkbox"]:not(#admin-select-all-times):checked').forEach(checkbox => {
+                selectedTimes.push(checkbox.value);
+            });
+
+            // Get attendees count and discount
+            const attendeesCount = parseInt(document.getElementById('admin-attendees').value);
+            const discountPercent = parseInt(document.getElementById('admin-discount').value);
+
+            // Validate selections
+            if (selectedCinemas.length === 0 || selectedMovies.length === 0 || selectedTimes.length === 0) {
+                alert('Please select at least one cinema, movie, and time!');
+                return;
+            }
+
+            if (isNaN(attendeesCount) || attendeesCount <= 0) {
+                alert('Please enter a valid number of attendees!');
+                return;
+            }
+
+            // Create booking for each combination
+            bookingState.adminBookings = [];
+            selectedCinemas.forEach(cinema => {
+                selectedMovies.forEach(movie => {
+                    selectedTimes.forEach(time => {
+                        // Create a booking entry
+                        const ticketPrice = 10;
+                        const totalPrice = attendeesCount * ticketPrice;
+                        const discount = (totalPrice * discountPercent) / 100;
+                        const finalPrice = totalPrice - discount;
+
+                        bookingState.adminBookings.push({
+                            cinema,
+                            movie,
+                            time,
+                            attendees: attendeesCount,
+                            ticketPrice,
+                            totalPrice,
+                            discount,
+                            finalPrice
+                        });
+                    });
+                });
+            });
+
+            // Process all bookings
+            processAdminBookings();
+        }
+
+        function processAdminBookings() {
+            // Process all admin bookings
+            if (bookingState.adminBookings.length === 0) {
+                alert('No bookings were created!');
+                return;
+            }
+
+            // Send admin booking request to backend
+            fetch('/api/book', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ admin_bookings: bookingState.adminBookings })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Calculate totals
+                    let totalSeatsBooked = 0;
+                    let totalAmount = 0;
+                    let totalDiscount = 0;
+                    let totalFinalAmount = 0;
+
+                    data.bookings.forEach(booking => {
+                        totalSeatsBooked += booking.attendees;
+                        totalAmount += booking.total_price;
+                        totalDiscount += booking.discount;
+                        totalFinalAmount += booking.final_price;
+                    });
+
+                    // Show admin confirmation
+                    document.getElementById('admin-panel').classList.add('hide');
+                    document.getElementById('confirmation-section').classList.remove('hide');
+
+                    // Create confirmation summary
+                    let confirmationHtml = `
+                        <h2>Admin Mass Booking Confirmed!</h2>
+                        <p>Total of ${data.bookings.length} bookings have been processed:</p>
+                        <div class="payment-summary">
+                            <p>Total Seats Booked: ${totalSeatsBooked}</p>
+                            <p>Total Original Amount: ${totalAmount}</p>
+                            <p>Total Discount Applied: ${totalDiscount}</p>
+                            <p>Total Final Amount: ${totalFinalAmount}</p>
+                            <hr>
+                            <h3>Booking Details:</h3>
+                            <ul>
+                    `;
+
+                    data.bookings.forEach(booking => {
+                        confirmationHtml += `
+                            <li>
+                                ID: ${booking.booking_id} - ${booking.cinema}, "${booking.movie}" at ${booking.time} -
+                                ${booking.attendees} seats - ${booking.final_price}
+                            </li>
+                        `;
+                    });
+
+                    confirmationHtml += `
+                            </ul>
+                        </div>
+                        <button class="btn" onclick="newBooking()">Make Another Booking</button>
+                    `;
+
+                    document.querySelector('#confirmation-section .booking-form').innerHTML = confirmationHtml;
+
+                    // URL tampering vulnerability - expose admin booking IDs
+                    const bookingIds = data.bookings.map(b => b.booking_id).join(',');
+                    history.pushState(null, '', `?userId=${bookingState.userId}&isAdmin=true&bookingIds=${bookingIds}`);
+
+                    // Set a short timeout before logging out (even for admin)
+                    setTimeout(function() {
+                        alert('Your admin bookings are confirmed! You will now be logged out.');
+                        logout();
+                    }, 5000);
+                } else {
+                    alert('Admin booking failed: ' + (data.message || 'An error occurred'));
+                }
+            })
+            .catch(error => {
+                console.error('Error during admin booking:', error);
+                alert('An error occurred during admin booking. Please try again.');
+            });
+        }
+
+        function newBooking() {
+            // Display logout alert
+            alert('You need to log in again to make a new booking.');
+
+            // Log the user out
+            logout();
+        }
+    </script>
+</body>
+</html>

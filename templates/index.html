@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Booking System - Index</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .file-list {
+            list-style: none;
+            padding: 0;
+        }
+        .file-list li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .file-list li:last-child {
+            border-bottom: none;
+        }
+        .file-list a {
+            text-decoration: none;
+            color: #0066cc;
+            display: block;
+        }
+        .file-list a:hover {
+            text-decoration: underline;
+            background-color: #f9f9f9;
+        }
+        .file-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .warning {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ABS Cinema Booking System - Directory Index</h1>
+
+        <div class="warning">
+            <p><strong>Note:</strong> This index page is deliberately insecure and exposes sensitive files to demonstrate security vulnerabilities. In a real application, this would be a serious security risk.</p>
+        </div>
+
+        <ul class="file-list">
+            <li>
+                <a href="/cinema">Main Booking Application</a>
+                <div class="file-description">The main cinema booking website application</div>
+            </li>
+            <li>
+                <a href="/users_info.txt">Users Information</a>
+                <div class="file-description">Contains user credentials for demonstration purposes</div>
+            </li>
+            <li>
+                <a href="/static/cinema.html">Raw HTML</a>
+                <div class="file-description">Static HTML file for the cinema booking application</div>
+            </li>
+            <li>
+                <a href="/api/cinema_data">Cinema Data API</a>
+                <div class="file-description">API endpoint for cinema seat information (JSON)</div>
+            </li>
+            <li>
+                <a href="/admin/database.php">Database Admin</a>
+                <div class="file-description">Database administration panel (requires admin credentials)</div>
+            </li>
+            <li>
+                <a href="/logs/system.txt">System Logs</a>
+                <div class="file-description">System logs containing sensitive information</div>
+            </li>
+        </ul>
+
+        <div class="warning">
+            <p><strong>Security Notice:</strong> This application contains intentional security vulnerabilities for educational purposes:</p>
+            <ul>
+                <li>SQL Injection</li>
+                <li>Insecure Direct Object References (IDOR)</li>
+                <li>URL Tampering</li>
+                <li>Insecure Design Flaws</li>
+                <li>Path Traversal</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
