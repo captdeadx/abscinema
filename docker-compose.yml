@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  cinema-app:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./:/app
+      - cinema-data:/app/data
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+    restart: unless-stopped
+
+volumes:
+  cinema-data:
