@@ -286,6 +286,12 @@ def book():
                 # Generate booking ID
                 booking_id = f"ADMIN-BK{datetime.now().strftime('%y%m%d%H%M%S')}-{len(result_bookings)}"
 
+                # Update cinema seats for admin bookings (this was missing)
+                cursor.execute(
+                    "UPDATE cinema_seats SET booked_seats = booked_seats + ? WHERE cinema_name = ? AND movie_name = ? AND show_time = ?",
+                    (attendees, cinema, movie, time)
+                )
+
                 # Insert booking (admin can exceed capacity)
                 cursor.execute(
                     """
